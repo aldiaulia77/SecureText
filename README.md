@@ -2,7 +2,7 @@
 
 Aplikasi web kriptografi berbasis Flask yang mengimplementasikan pipeline
 **Modified Vigenere Cipher (substitusi)** + **Columnar Transposition Cipher
-(permutasi)**, sesuai video referensi.
+(permutasi)**.
 
 ## Teknologi
 - Python 3 + Flask (Blueprint architecture)
