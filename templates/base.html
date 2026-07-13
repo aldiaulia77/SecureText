@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}SecureText // Platform Kriptografi{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+    <a href="{{ url_for('main.landing') }}" class="brand">
+        <span class="icon-badge">🔒</span> SecureText
+    </a>
+    <div class="navbar-links">
+        <a href="{{ url_for('main.landing') }}" class="nav-link {% if request.endpoint == 'main.landing' %}active{% endif %}">Landing Page</a>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('main.dashboard') }}" class="nav-link {% if request.endpoint == 'main.dashboard' %}active{% endif %}">Dashboard</a>
+            <a href="{{ url_for('crypto.encrypt') }}" class="nav-link {% if request.endpoint == 'crypto.encrypt' %}active{% endif %}">Enkripsi</a>
+            <a href="{{ url_for('crypto.decrypt') }}" class="nav-link {% if request.endpoint == 'crypto.decrypt' %}active{% endif %}">Dekripsi</a>
+            <a href="{{ url_for('crypto.analysis') }}" class="nav-link {% if request.endpoint == 'crypto.analysis' %}active{% endif %}">Analisis</a>
+            <a href="{{ url_for('crypto.history') }}" class="nav-link {% if request.endpoint == 'crypto.history' %}active{% endif %}">Riwayat</a>
+            <a href="{{ url_for('main.about') }}" class="nav-link {% if request.endpoint == 'main.about' %}active{% endif %}">Tentang</a>
+            <a href="{{ url_for('profile.profile') }}" class="nav-link {% if request.endpoint == 'profile.profile' %}active{% endif %}">Profil</a>
+            <a href="{{ url_for('auth.logout') }}" class="btn btn-red">Logout</a>
+        {% else %}
+            <a href="{{ url_for('main.about') }}" class="nav-link {% if request.endpoint == 'main.about' %}active{% endif %}">Tentang</a>
+            <a href="{{ url_for('auth.login') }}" class="nav-link">Login</a>
+            <a href="{{ url_for('auth.register') }}" class="btn btn-yellow">Daftar</a>
+        {% endif %}
+    </div>
+</nav>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="flash-stack">
+        {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+{% endwith %}
+
+{% block content %}{% endblock %}
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,65 @@
+{% extends "app_base.html" %}
+{% block title %}Modul Enkripsi // SecureText{% endblock %}
+{% block app_content %}
+<h1 class="page-title">Modul Enkripsi</h1>
+<p class="page-sub">Proses enkripsi bertumpuk Modified Vigenere dan Transposisi Kolom.</p>
+
+<div class="pipeline-grid">
+    <div class="panel block bg-yellow" style="background:#fff;">
+        <div class="panel-head">
+            <h3>PARAMETER MASUKAN</h3>
+            <span class="tag">LANGKAH 1</span>
+        </div>
+        <form method="POST" action="{{ url_for('crypto.encrypt') }}" id="encrypt-form">
+            <div class="field">
+                <label for="plaintext">Plaintext (Pesan Asli)</label>
+                <textarea id="plaintext" name="plaintext" placeholder="Ketik atau tempel pesan asli di sini..." required>{{ request.form.get('plaintext', '') }}</textarea>
+            </div>
+            <div style="display:flex; gap:12px;">
+                <div class="field" style="flex:1;">
+                    <label for="vigenere_key">Kunci Vigenere</label>
+                    <input type="text" id="vigenere_key" name="vigenere_key" placeholder="Contoh: KUNCI" required value="{{ request.form.get('vigenere_key', '') }}">
+                </div>
+                <div class="field" style="flex:1;">
+                    <label for="transposition_key">Kunci Transposisi</label>
+                    <input type="number" min="2" id="transposition_key" name="transposition_key" placeholder="Contoh: 4" required value="{{ request.form.get('transposition_key', '') }}">
+                </div>
+            </div>
+            <button type="submit" class="btn btn-green btn-block">🛡️ Jalankan Enkripsi</button>
+        </form>
+    </div>
+
+    <div class="panel block">
+        <div class="panel-head">
+            <h3>PIPA SUPER ENKRIPSI</h3>
+            <span class="tag" style="{% if result %}background:var(--green);{% else %}background:var(--red); color:#fff;{% endif %}">{{ 'SELESAI' if result else 'SIAGA' }}</span>
+        </div>
+
+        <div class="pipeline-step {% if result %}filled{% endif %}">
+            <div class="step-label"><span>1. PLAINTEXT MASUKAN</span> {% if result %}<button type="button" class="copy-btn" onclick="copyText('step1')">Salin</button>{% endif %}</div>
+            <div class="step-value" id="step1">{{ result.plaintext if result else '[Menunggu Plaintext]' }}</div>
+        </div>
+        <div class="pipeline-arrow">⬇</div>
+
+        <div class="pipeline-step {% if result %}filled cyan{% endif %}">
+            <div class="step-label"><span>2. INTERMEDIARY VIGENERE (SUBSTITUSI)</span> {% if result %}<button type="button" class="copy-btn" onclick="copyText('step2')">Salin</button>{% endif %}</div>
+            <div class="step-value" id="step2">{{ result.intermediary if result else '[Menunggu Kunci]' }}</div>
+        </div>
+        <div class="pipeline-arrow">⬇</div>
+
+        <div class="pipeline-step {% if result %}final{% endif %}">
+            <div class="step-label"><span>3. TRANSPOSISI KOLOM (CIPHERTEXT AKHIR)</span> {% if result %}<button type="button" class="copy-btn" onclick="copyText('step3')">Salin</button>{% endif %}</div>
+            <div class="step-value" id="step3">{{ result.ciphertext if result else '[Menunggu Hasil]' }}</div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function copyText(id) {
+    const el = document.getElementById(id);
+    navigator.clipboard.writeText(el.innerText);
+}
+</script>
+{% endblock %}

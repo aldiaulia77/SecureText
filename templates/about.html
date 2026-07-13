@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}Panduan Teknis Kriptografi // SecureText{% endblock %}
+{% block content %}
+<div class="container" style="padding:32px 24px;">
+<h1 class="page-title">Panduan Teknis Kriptografi</h1>
+<p class="page-sub">Spesifikasi formal arsitektur super-enkripsi dan alur pemrosesan data SecureText.</p>
+
+<div class="pipeline-grid">
+    <div class="panel block bg-yellow">
+        <div class="panel-head">
+            <h3>1. Modified Vigenere</h3>
+            <span class="tag">SUBSTITUTION</span>
+        </div>
+        <p style="font-weight:800; font-size:0.8rem;">ALFABET &amp; MAPPING (27 KARAKTER):</p>
+        <div class="log-field-value" style="margin-bottom:10px;">
+            A-Z (0-25), @ = 26 (Representasi Spasi)<br><br>
+            Spasi dikonversi menjadi @ sebelum enkripsi:<br>
+            "TEKNIK INFORMATIKA" &rarr; "TEKNIK@INFORMATIKA"
+        </div>
+        <p style="font-weight:800; font-size:0.8rem;">FORMULA MATEMATIS:</p>
+        <div class="log-field-value">
+            Enkripsi: C&#7522; = (P&#7522; + K&#7522;) mod 27<br>
+            Dekripsi: P&#7522; = (C&#7522; - K&#7522;) mod 27
+        </div>
+        <p style="font-size:0.75rem; margin-top:10px;">*P&#7522; = indeks plaintext, K&#7522; = indeks key, C&#7522; = indeks ciphertext</p>
+    </div>
+
+    <div class="panel block bg-cyan">
+        <div class="panel-head">
+            <h3>2. Columnar Transposition</h3>
+            <span class="tag">TRANSPOSITION</span>
+        </div>
+        <p>Mengacak posisi karakter dengan menyusun output Vigenere ke dalam matriks berdasarkan jumlah kolom kunci, kemudian dibaca kolom demi kolom (kiri ke kanan).</p>
+        <p style="font-weight:800; font-size:0.8rem;">SIMULASI TRANSPOSISI (KOLOM = 5):</p>
+        <div class="log-field-value">
+            Input: TEKNIK@INFORMATIKA (Length: 18)<br><br>
+            T E K N I<br>
+            K @ I N F<br>
+            O R M A T<br>
+            I K A X X &nbsp;(X = Padding)<br><br>
+            Output: TKOIE@RKKIMANNAXIFTX
+        </div>
+    </div>
+</div>
+
+<div class="panel block" style="margin-top:20px;">
+    <h3 style="margin-top:0;">3. Konsep Super Enkripsi</h3>
+    <div class="pipeline-grid">
+        <div class="pipeline-step filled">
+            <div class="step-label">LEVEL 1: CONFUSION (SUBSTITUSI)</div>
+            <div class="step-value" style="background:transparent; border:none;">Modified Vigenere Cipher. Mengaburkan hubungan statistik antara plaintext dan ciphertext dengan mensubstitusi nilai karakter.</div>
+        </div>
+        <div class="pipeline-step filled cyan">
+            <div class="step-label">LEVEL 2: DIFFUSION (TRANSPOSISI)</div>
+            <div class="step-value" style="background:transparent; border:none;">Columnar Transposition Cipher. Menyebarkan pengaruh setiap karakter ke seluruh posisi lain melalui permutasi, agar pola frekuensi asli sulit dikenali.</div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends "app_base.html" %}
+{% block title %}Log Aktivitas // SecureText{% endblock %}
+{% block app_content %}
+<div class="panel-head" style="margin-bottom:6px;">
+    <h1 class="page-title" style="margin-bottom:0;">Log Aktivitas Keamanan</h1>
+</div>
+<p class="page-sub">
+    Arsip catatan historis pemrosesan sandi yang dieksekusi pada server ini.
+    <span class="tag" style="float:right; margin-left:8px;">{{ logs|length }} LOG TERDATA</span>
+    {% if logs %}
+    <form method="POST" action="{{ url_for('history_actions.clear_logs') }}" style="display:inline; float:right;" onsubmit="return confirm('Bersihkan seluruh log riwayat?');">
+        <button type="submit" class="btn btn-red" style="padding:4px 12px; font-size:0.75rem;">Bersihkan Semua</button>
+    </form>
+    {% endif %}
+</p>
+
+{% if logs %}
+    {% for log in logs %}
+    <div class="log-card {{ 'decrypt' if log.process_type == 'decrypt' else '' }}">
+        <div class="log-card-head">
+            <span>{{ 'ENKRIPSI' if log.process_type == 'encrypt' else 'DEKRIPSI' }} &nbsp;|&nbsp; Log ID: {{ log.id }}</span>
+            <span>
+                🕒 {{ log.created_at.strftime('%Y-%m-%d %H:%M:%S') }}
+                <form method="POST" action="{{ url_for('history_actions.delete_log', log_id=log.id) }}" style="display:inline;" onsubmit="return confirm('Hapus log ini?');">
+                    <button type="submit" class="btn btn-red" style="padding:3px 10px; font-size:0.7rem; margin-left:8px;">Hapus</button>
+                </form>
+            </span>
+        </div>
+        <div class="log-card-body">
+            <div>
+                <div class="log-field-label">{{ 'Plaintext (Pesan Asli)' if log.process_type == 'encrypt' else 'Ciphertext (Pesan Sandi)' }}</div>
+                <div class="log-field-value">{{ log.input_text }}</div>
+            </div>
+            <div>
+                <div class="log-field-label">{{ 'Ciphertext (Pesan Sandi)' if log.process_type == 'encrypt' else 'Plaintext (Pesan Asli)' }}</div>
+                <div class="log-field-value">{{ log.output_text }}</div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+<div class="block" style="padding:24px; border-radius:14px; text-align:center; color:#666;">
+    Belum ada log aktivitas. Jalankan proses enkripsi atau dekripsi untuk mulai mencatat riwayat.
+</div>
+{% endif %}
+{% endblock %}

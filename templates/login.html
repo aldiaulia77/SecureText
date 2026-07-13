@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Login // SecureText{% endblock %}
+{% block content %}
+<div class="auth-wrap">
+    <div class="auth-card block bg-yellow">
+        <h2>🔒 Masuk ke SecureText</h2>
+        <p class="sub">Akses konsol kriptografi Anda.</p>
+        <form method="POST" action="{{ url_for('auth.login') }}">
+            <div class="field">
+                <label for="identifier">Username / Email</label>
+                <input type="text" id="identifier" name="identifier" required autofocus>
+            </div>
+            <div class="field">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-dark btn-block">Login</button>
+        </form>
+        <div class="auth-switch">
+            Belum punya akun? <a href="{{ url_for('auth.register') }}">Daftar di sini</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="app-shell">
+    <aside class="sidebar">
+        <a href="{{ url_for('main.dashboard') }}" class="side-link {% if request.endpoint == 'main.dashboard' %}active{% endif %}">📊 Dashboard</a>
+        <a href="{{ url_for('crypto.encrypt') }}" class="side-link {% if request.endpoint == 'crypto.encrypt' %}active{% endif %}">🔐 Enkripsi</a>
+        <a href="{{ url_for('crypto.decrypt') }}" class="side-link {% if request.endpoint == 'crypto.decrypt' %}active{% endif %}">🔓 Dekripsi</a>
+        <a href="{{ url_for('crypto.analysis') }}" class="side-link {% if request.endpoint == 'crypto.analysis' %}active{% endif %}">📈 Analisis</a>
+        <a href="{{ url_for('crypto.history') }}" class="side-link {% if request.endpoint == 'crypto.history' %}active{% endif %}">🕒 Riwayat</a>
+        <a href="{{ url_for('profile.profile') }}" class="side-link {% if request.endpoint == 'profile.profile' %}active{% endif %}">👤 Profil</a>
+        <a href="{{ url_for('auth.logout') }}" class="side-link">🚪 Logout</a>
+    </aside>
+    <main class="main-content">
+        {% block app_content %}{% endblock %}
+    </main>
+</div>
+{% endblock %}

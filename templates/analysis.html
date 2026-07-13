@@ -1,0 +1,60 @@
+{% extends "app_base.html" %}
+{% block title %}Analisis Frekuensi // SecureText{% endblock %}
+{% block app_content %}
+<h1 class="page-title">Analisis Frekuensi</h1>
+<p class="page-sub">Analisis persentase distribusi kemunculan huruf untuk mengidentifikasi pola ciphertext.</p>
+
+<div class="panel block" style="background:#fff; margin-bottom:20px;">
+    <div class="panel-head">
+        <h3>DATA INPUT ANALISIS</h3>
+        <span class="tag">{{ 'DIHITUNG' if report else 'READY' }}</span>
+    </div>
+    <form method="POST" action="{{ url_for('crypto.analysis') }}">
+        <div class="field">
+            <label for="input_text">Teks untuk Dianalisis</label>
+            <textarea id="input_text" name="input_text" placeholder="Tempel teks cipher atau teks asli di sini untuk dianalisis statistiknya...">{{ input_text }}</textarea>
+        </div>
+        <button type="submit" class="btn btn-cyan btn-block">📈 Jalankan Analisis Frekuensi</button>
+    </form>
+</div>
+
+{% if report %}
+<div class="panel block bg-yellow">
+    <h3 style="margin-top:0;">LAPORAN ANALISIS KRIPTOGRAFI</h3>
+    <div class="pipeline-grid">
+        <div>
+            <p style="font-weight:800; font-size:0.8rem;">// MATRIKS DISTRIBUSI HURUF</p>
+            <div class="table-wrap" style="max-height:300px; overflow-y:auto;">
+                <table class="data-table" style="background:#fff;">
+                    <thead><tr><th>Karakter</th><th>Jumlah</th><th>Persentase</th></tr></thead>
+                    <tbody>
+                    {% for row in report %}
+                        <tr>
+                            <td>{{ row.karakter }}</td>
+                            <td>{{ row.jumlah }}</td>
+                            <td>
+                                <span class="progress-bar-track"><span class="progress-bar-fill" style="width:{{ row.persentase }}%;"></span></span>
+                                {{ row.persentase }}%
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div>
+            <p style="font-weight:800; font-size:0.8rem;">// GRAFIK VISUALISASI BATANG</p>
+            <div class="bar-chart">
+                {% set max_val = report | map(attribute='jumlah') | max %}
+                {% for row in report %}
+                <div class="bar" style="height: {{ (row.jumlah / max_val * 100) }}%;">
+                    <span>{{ row.jumlah }}</span>
+                    <span class="x-label">{{ row.karakter }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

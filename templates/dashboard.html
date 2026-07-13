@@ -1,0 +1,69 @@
+{% extends "app_base.html" %}
+{% block title %}Dashboard // SecureText{% endblock %}
+{% block app_content %}
+<h1 class="page-title">Dashboard Keamanan</h1>
+<p class="page-sub">Ringkasan statistik enkripsi dan pemantauan modul kriptografi aktif. <span class="status-badge" style="float:right;">✓ Sesi Aman</span></p>
+
+<div class="stat-grid">
+    <div class="stat-card block bg-green">
+        <div class="stat-label">METRIK OPERASI 🛡️</div>
+        <div class="stat-value">TOTAL ENKRIPSI</div>
+        <div class="stat-value">{{ total_encrypt }}</div>
+        <div class="stat-caption">// Paket data terenkripsi aktif</div>
+    </div>
+    <div class="stat-card block bg-cyan">
+        <div class="stat-label">METRIK OPERASI 🛡️</div>
+        <div class="stat-value">TOTAL DEKRIPSI</div>
+        <div class="stat-value">{{ total_decrypt }}</div>
+        <div class="stat-caption">// Log cipher terpecahkan</div>
+    </div>
+    <div class="stat-card block bg-purple">
+        <div class="stat-label">SPESIFIKASI NODE ⚙️</div>
+        <div class="status-row"><span>NAMA:</span><span>MAIN-CLD1</span></div>
+        <div class="status-row"><span>VERSI:</span><span>v1.0.4-LATEST</span></div>
+        <div class="status-row"><span>LOKASI:</span><span>SECURE-WW1</span></div>
+    </div>
+</div>
+
+<div class="console-grid">
+    <div class="console-card block bg-yellow">
+        <h3>KONSOL UTAMA OPERASI <span class="tag" style="float:right;">SUPER CIPHER</span></h3>
+        <p>Pilih modul operasi untuk melakukan penyandian berlapis atau pemecahan cipher:</p>
+        <div class="console-actions">
+            <a href="{{ url_for('crypto.encrypt') }}" class="btn btn-green">🔐 Enkripsi Data</a>
+            <a href="{{ url_for('crypto.decrypt') }}" class="btn btn-cyan">🔓 Dekripsi Data</a>
+        </div>
+    </div>
+    <div class="console-card block">
+        <h3>Status Submodul</h3>
+        <div class="status-row"><span>Core Engine</span><span class="val ok">Online</span></div>
+        <div class="status-row"><span>Database Link</span><span class="val ok">Online</span></div>
+        <div class="status-row"><span>Modul Analisis</span><span class="val ok">Online</span></div>
+    </div>
+</div>
+
+<div class="block" style="margin-top:20px; padding:20px; border-radius:16px;">
+    <h3 style="margin-top:0;">Aktivitas Terbaru</h3>
+    {% if recent_activity %}
+    <div class="table-wrap">
+        <table class="data-table">
+            <thead>
+                <tr><th>#</th><th>Jenis Proses</th><th>Algoritma</th><th>Waktu</th></tr>
+            </thead>
+            <tbody>
+            {% for log in recent_activity %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ 'Enkripsi' if log.process_type == 'encrypt' else 'Dekripsi' }}</td>
+                    <td>Modified Vigenere + Columnar Transposition</td>
+                    <td>{{ log.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p style="color:#666;">Belum ada aktivitas. Mulai dengan menjalankan proses enkripsi atau dekripsi.</p>
+    {% endif %}
+</div>
+{% endblock %}
